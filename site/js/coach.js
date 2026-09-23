@@ -122,7 +122,7 @@ ${meta.runsText || '(本次运行未留下提问记录)'}
  * @param {{playerRuns, practices, levelTitles}} arg
  * @returns {Promise<{files: {path:string,text:string}[], usedModel: boolean}>}
  */
-export async function buildSkill({ playerRuns, practices, levelTitles }) {
+export async function buildSkill({ playerRuns, practices, levelTitles, playerName }) {
   const picked = await retrievePractices(
     '如何在产品里正确使用 Jev 结构化判断模型：题型选择、criteria 设计、置信度阈值与兜底、批量提问、state 构造',
     practices,
@@ -201,6 +201,7 @@ ${picked.map((p) => `## ${p.title}\n\n${p.text}\n`).join('\n')}`;
 
 安装方式：把本目录放进项目的 \`.qoder/skills/jev/\` 或 \`.claude/skills/jev/\` 即可被 agent 识别。
 
+导出者：${playerName || '匿名玩家'}
 导出时间：${new Date().toISOString()}
 `;
 

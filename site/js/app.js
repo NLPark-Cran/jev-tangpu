@@ -1,6 +1,7 @@
 import * as TD from './td.js';
 import * as G from './game.js';
 import * as C from './coach.js';
+import * as WA from './watcha.js';
 import { downloadZip } from './zip.js';
 
 const $ = (s) => document.querySelector(s);
@@ -65,6 +66,39 @@ function refreshKeyUI() {
   pill.textContent = key ? '已连接 ' + key.slice(0, 6) + '…' + key.slice(-4) : '未连接 TokenDance';
   pill.classList.toggle('on', !!key);
   renderConn();
+  refreshWaUI();
+}
+
+function playerName() {
+  const u = WA.session()?.user;
+  return u ? u.nickname || '观猹#' + u.user_id : '';
+}
+
+function refreshWaUI() {
+  const chip = $('#waChip');
+  const btn = $('#btnWa');
+  const u = WA.session()?.user;
+  chip.textContent = '';
+  chip.classList.toggle('on', !!u);
+  if (u) {
+    if (u.avatar_url) {
+      const img = document.createElement('img');
+      img.className = 'avatar';
+      img.alt = '';
+      img.src = u.avatar_url;
+      chip.appendChild(img);
+    }
+    chip.appendChild(document.createTextNode(' ' + (u.nickname || '观猹#' + u.user_id)));
+    btn.textContent = '退出登录';
+    btn.onclick = () => {
+      WA.logout();
+      refreshWaUI();
+      toast('已退出观猹账号');
+    };
+  } else {
+    btn.textContent = '观猹登录';
+    btn.onclick = () => WA.beginLogin().catch((e) => toast(e.message));
+  }
 }
 
 function renderConn() {
@@ -576,6 +610,7 @@ function showSkill() {
       const { files, usedModel } = await C.buildSkill({
         playerRuns: S.runs,
         practices,
+        playerName: playerName(),
         levelTitles: S.levels.map((l) => `${l.title}：${l.pattern}`),
       });
       downloadZip('jev-skill.zip', files);
@@ -602,9 +637,18 @@ async function boot() {
   $('#btnSkill').onclick = showSkill;
   $('#btnDecide').onclick = goDecide;
 
-  // OAuth 式授权回调
-  const code = new URLSearchParams(location.search).get('code');
-  if (code) {
+  // 授权回调：观猹与 TokenDance 都用 ?code= 回跳，靠 state 前缀区分
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  if (code && WA.isWatchaCallback(params)) {
+    try {
+      await WA.finishLogin(code, params.get('state'));
+      toast('观猹登录成功');
+    } catch (e) {
+      toast('观猹登录失败：' + e.message);
+    }
+    history.replaceState(null, '', location.pathname);
+  } else if (code) {
     try {
       await TD.finishAuth(code);
       toast('授权成功，Key 已保存到本地');

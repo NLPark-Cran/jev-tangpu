@@ -51,6 +51,10 @@ a { color: var(--accent); }
   color: var(--muted); white-space: nowrap;
 }
 .pill.on { color: var(--good); border-color: rgba(143, 191, 122, 0.4); }
+.avatar {
+  width: 17px; height: 17px; border-radius: 50%; vertical-align: -3px;
+  object-fit: cover; margin-right: 5px; background: var(--bg2);
+}
 
 button {
   font: inherit; cursor: pointer; border-radius: 9px; border: 1px solid var(--line);
