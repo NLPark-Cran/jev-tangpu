@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- vault-seed：汤底防剧透密钥的一段碎片（见 js/vault.js 与 README 说明） -->
+<meta name="vault-seed" content="x7-k3q">
+<meta name="description" content="Jev 汤铺：一款海龟汤式的推理教学游戏。用结构化判断模型 Jev 问出隐藏真相，在预算内做出产品决策，通关带走一份打包好 Jev 的 skill。">
+<title>Jev 汤铺 · 用 System One 问出真相</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2314110e'/%3E%3Cpath d='M14 30h36a18 18 0 0 1-36 0z' fill='%23d96f3f'/%3E%3Crect x='12' y='26' width='40' height='5' rx='2.5' fill='%23f0e9dd'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><span class="logo">汤</span><span>Jev 汤铺</span></div>
+  <nav class="keybar">
+    <span id="keyStatus" class="pill">未连接 TokenDance</span>
+    <button id="btnAuth" class="ghost">授权新 Key</button>
+    <button id="btnPaste" class="ghost">粘贴 Key</button>
+    <button id="btnSkill" class="ghost">带走 skill</button>
+  </nav>
+</header>
+
+<main id="app">
+
+  <!-- ① 开张 -->
+  <section id="screen-gate" class="screen">
+    <div class="hero">
+      <p class="eyebrow">仿海龟汤 · 教学向 · 目标导向</p>
+      <h1>知道真相的<br><em>不是人</em>，是一台判断器。</h1>
+      <p class="lead">
+        你是产品决策人。桌上躺着一桩怪案，背后藏着完整真相。<br>
+        你不能问「为什么」，只能向 <strong>Jev</strong> 提结构化判断题——是非、选择、分级。<br>
+        它只回概率。用有限的几个问题问出真相，做出决策，然后开汤。
+      </p>
+      <ol class="steps">
+        <li><b>上汤</b><span>读汤面：怪现象、原始输入、你的目标</span></li>
+        <li><b>问汤</b><span>写 Jev 问题，看校准概率与锐度</span></li>
+        <li><b>开汤</b><span>提交决策，揭示汤底，看透明判分</span></li>
+        <li><b>带走</b><span>把 Jev 打包成 skill 导走</span></li>
+      </ol>
+      <div id="connBox" class="conn"></div>
+    </div>
+    <h2 class="section-title">今日汤单</h2>
+    <div id="levelList" class="level-grid"></div>
+  </section>
+
+  <!-- ② 汤面 -->
+  <section id="screen-level" class="screen hidden"></section>
+
+  <!-- ③ 问汤 -->
+  <section id="screen-ask" class="screen hidden">
+    <div class="ask-grid">
+      <div class="ask-side">
+        <div id="composer" class="card"></div>
+      </div>
+      <div class="ask-main">
+        <div id="hud" class="hud"></div>
+        <div id="answers" class="answers"></div>
+        <div class="ask-foot">
+          <button id="btnDecide" class="primary">我有结论了，开汤</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 决策 -->
+  <section id="screen-decide" class="screen hidden"></section>
+
+  <!-- ⑤ 开汤复盘 -->
+  <section id="screen-reveal" class="screen hidden"></section>
+
+  <!-- ⑥ 带走 -->
+  <section id="screen-skill" class="screen hidden"></section>
+
+</main>
+
+<footer class="foot">
+  <span>模型：bocha-jev-v1（结构化判断）· deepseek-v4.1-flash（教练）· qwen3.7 embedding/rerank（实践检索）· seedream-5.0-pro（插画）</span>
+  <span>接入：<a href="https://tokendance.space/docs/ai-integration.md" target="_blank" rel="noreferrer">TokenDance</a></span>
+</footer>
+
+<div id="toast" class="toast"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

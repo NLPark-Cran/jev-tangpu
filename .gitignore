@@ -1,0 +1,5 @@
+# 关卡明文（含汤底/判分）不入库，防剧透；构建产物 secrets.enc.json 已入库
+dev/level-*.json
+node_modules/
+*.log
+.DS_Store
