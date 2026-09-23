@@ -14,6 +14,9 @@ const STORE = 'jev.wa';
 const PENDING = 'jev.wa.pkce';
 
 const enc = new TextEncoder();
+// 观猹表单里的 Domain 填的是「回调地址的 URI Schema」（如 http://localhost:3000，无尾斜杠），
+// 所以 redirect_uri 只用 origin，前后两步必须一致。
+const redirectUri = () => location.origin;
 const b64url = (bytes) =>
   btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const VERIFIER_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
@@ -46,7 +49,7 @@ export async function beginLogin() {
   const qs = new URLSearchParams({
     response_type: 'code',
     client_id: CLIENT_ID,
-    redirect_uri: location.origin + location.pathname,
+    redirect_uri: redirectUri(),
     scope: SCOPE,
     state,
     code_challenge: challenge,
@@ -69,7 +72,7 @@ export async function finishLogin(code, state) {
   const body = new URLSearchParams({
     grant_type: 'authorization_code',
     code,
-    redirect_uri: location.origin + location.pathname,
+    redirect_uri: redirectUri(),
     client_id: CLIENT_ID,
     code_verifier: pending.verifier,
   });

@@ -25,10 +25,18 @@ export function clearKey() {
   localStorage.removeItem(KEY_STORE);
 }
 
-// 应用归因（可选）：让 TokenDance 记录调用来自本应用。
+// 应用归因：App URL 是归因的唯一要素，必须唯一且稳定（协议/端口/路径/尾斜杠都算数）。
+// 固定成 origin + '/'，避免玩家用 /index.html 进来时被算成另一个应用。
 function appUrl() {
-  return location.origin + location.pathname;
+  return location.origin + '/';
 }
+
+// https://tokendance.space/docs/api-key-oauth.md#recover-key
+const RECOVERY = {
+  top_up_balance: '账户余额不足，请先到 TokenDance 充值（这把 Key 仍然有效），再回来重试',
+  reauthorize_api_key: '这把 Key 已失效（被删除、禁用、过期，或总额度用尽），请重新连接 Token 钱包',
+  api_key_quota: '这把 Key 的周期额度用完了：等额度刷新，或重新连接 Token 钱包换一把',
+};
 
 async function request(path, body, { method = 'POST' } = {}) {
   const headers = {
@@ -60,10 +68,13 @@ async function request(path, body, { method = 'POST' } = {}) {
       (data && data.error && data.error.message) ||
       text ||
       res.status;
-    const err = new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+    const hint = RECOVERY[recovery];
+    const raw = typeof msg === 'string' ? msg : JSON.stringify(msg);
+    const err = new Error(hint ? hint : raw);
     err.status = res.status;
     err.recovery = recovery;
     err.detail = detail;
+    if (hint) err.raw = raw;
     throw err;
   }
   return data;
@@ -173,7 +184,7 @@ export async function beginAuth(keyName = 'Jev 汤铺') {
   sessionStorage.setItem(VERIFIER_STORE, verifier);
   const challenge = await challengeS256(verifier);
   const params = new URLSearchParams({
-    callback_url: location.origin + location.pathname,
+    callback_url: appUrl(),
     code_challenge: challenge,
     code_challenge_method: 'S256',
     app_url: appUrl(),

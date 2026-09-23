@@ -124,7 +124,7 @@ function renderConn() {
     box.innerHTML = `<h3>先接上 TokenDance</h3>
       <p>本游戏全部模型调用都发生在<b>你的浏览器</b>里，用的是<b>你自己的</b> TokenDance API Key——所以你问的每一句、每一次推理的延迟与 token 消耗，都真实计在你名下。</p>
       <div class="row">
-        <button class="primary" id="btnAuthGo">用 TokenDance 授权一把新 Key</button>
+        <button class="primary" id="btnAuthGo">连接 Token 钱包</button>
         <input id="keyInput" type="text" placeholder="或粘贴已有 sk-… Key" autocomplete="off">
         <button class="ghost" id="btnKeySave">保存</button>
       </div>
