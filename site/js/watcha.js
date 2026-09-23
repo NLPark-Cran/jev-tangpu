@@ -6,9 +6,9 @@
 // 公开客户端没有 client_secret，必须带 PKCE；client_id 里的 + 在 URL 中要编码成 %2B。
 
 const AUTH_BASE = 'https://watcha.cn';
-// 文档「常见问题」给出的非机密客户端测试 client_id。
-// 正式上线前按《观猹 OAuth2.0 服务开通信息收集表》申请自己的 client_id 替换这里即可。
-export const CLIENT_ID = '3p9Mcr+CNLPAMFC0';
+// 观猹下发的公开客户端 client_id（is_public=true，走 PKCE，无 client_secret）。
+// 注册 Domain：https://jev-tangpu.lhub.tt2.li —— 必须与上面的 redirectUri() 一致。
+export const CLIENT_ID = 'nBrSZEuaCrUq8MLs';
 const SCOPE = 'read'; // 只要 user_id / nickname / avatar_url，不要 email、phone
 const STORE = 'jev.wa';
 const PENDING = 'jev.wa.pkce';
